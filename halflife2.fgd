@@ -3718,7 +3718,7 @@
 		1 : "Yes"
 	]
 	
-	SetStunstickPickupBehavior(choices) : "Stunstick Pickup Behavior" : 0 : "Controls how stunsticks should react to being touched by the player." =
+	SetStunstickPickupBehavior(choices) : "Stunstick Pickup Behavior" : 1 : "Controls how stunsticks should react to being touched by the player." =
 	[
 		0 : "Only apply energy and disappear (default)"
 		1 : "Allow pickup, apply energy if already owned"
