@@ -237,6 +237,8 @@
 [
 	output OnBallReinserted(void) : "Fired when a combine ball is reinserted into the field (only gets triggered when Combine Power supply is checked)"
 	output OnLastBallGrabbed(void) : "Fired when the last combine ball is grabbed from the field by a mega physcannon"
+
+	input Destroy(void) : "Releases all balls from the spawner as if they were punted out by the gravity gun."
 ]
 
 @PointClass base(CombineBallSpawners, Parentname) = point_combine_ball_launcher :
@@ -393,6 +395,7 @@
 	output OnDeploy(void) : "Turret is becoming active and dangerous."
 	output OnRetire(void) : "Turret is becoming inactive and harmless."
 	output OnTipped(void) : "Turret has been tipped over and is inactive."
+	output OnStartTipped(void) : "Turret has just been tipped over."
 	output OnPhysGunPickup(void) : "Picked up with physgun"
 	output OnPhysGunDrop(void) : "Released by physgun"
 ]
@@ -1410,6 +1413,7 @@
 		0 : "Normal headcrabs"
 		1 : "Fast Headcrabs"
 		2 : "Poison Headcrabs"
+		-1 : "Random"
 	]
 	HeadcrabCount(integer) : "Headcrab count" : 6 : "Number of headcrabs to spawn on impact"
 	FlightSpeed(float) : "Flight Speed" : 3000  : "Speed to fly through the air"
@@ -1868,7 +1872,11 @@
 	spawnflags(Flags) = 
 	[
 		32768 :  "[32768] Never turn into a torso" : 0
+		65536 :  "[65536] Never release headcrab" : 0
 	]
+
+	MaxDistToSwat(float) : "Max Distance to Swat Props" : : "Overrides the maximum distance in which this zombie should be able to swat props at enemies. Default is 1000"
+	MaxObjMassToSwat(float) : "Max Object Mass to Swat" : : "Overrides the maximum mass this zombie should consider when choosing props to swat. Default is 60"
 
 	output OnSwattedProp(ehandle) : "Fires when this NPC swats a prop, passing the prop as the activator and parameter."
 	output OnCrab(ehandle) : "Fires when the zombie releases a headcrab, passing the headcrab as the activator and parameter."
@@ -1886,10 +1894,12 @@
 
 @NPCClass base(BaseZombie) studio("models/Zombie/Classic.mdl") = npc_zombie : "Zombie"
 [
+	MeleeReach(float) : "Melee Reach" : : "Overrides the maximum distance in which this zombie should be able to swat at enemies. Default is 55"
 ]
 
 @NPCClass base(BaseZombie) studio("models/Zombie/Classic_torso.mdl") = npc_zombie_torso : "Zombie Torso"
 [
+	MeleeReach(float) : "Melee Reach" : : "Overrides the maximum distance in which this zombie should be able to swat at enemies. Default is 55"
 ]
 
 // CUSTOM ZOMBIES
@@ -2499,6 +2509,7 @@
 	input BeginSequence(void) : "Summons an NPC to act out the scripted sequence."
 	input MoveToPosition(void) : "Summons an NPC to the script location. They will play their scripted idle (or ACT_IDLE if none is specified) until BeginSequence is triggered."
 	input CancelSequence(void) : "Stops the scripted sequence. If fired after a sequence starts, this input will not take effect until the NPC finishes playing the scripted action animation."
+	input StopActionLoop(void) : "Stops looping the action animation if it is specified to loop."
 	input SetTarget(target_destination) : "Sets the target NPC."
 
 	// Outputs
